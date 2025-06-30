@@ -1,0 +1,184 @@
+import time
+from visualize_gates import draw_gate_packing
+
+#Marks tje dtarting of our implementation of the algorithm 
+start_time = time.time()
+
+def read_gate_details(filename):
+    gates = []  # List to store details of all gates
+    
+    # Open the file for reading
+    with open(filename, 'r') as file:
+        for line in file:
+            # Strip any leading/trailing whitespace and split the line into components
+            parts = line.strip().split()
+            
+            if len(parts) == 3:
+                name = parts[0]
+                try:
+                    # Convert width and height to integers
+                    width = int(parts[1])
+                    height = int(parts[2])
+                    
+                    # Append the details as a tuple to the list
+                    gates.append((name, width, height))
+                    
+                except ValueError:
+                    print(f"Invalid width or height value in line: {line.strip()}")
+            else:
+                print(f"Invalid line format: {line.strip()}")
+                    
+    return gates
+
+# Define the path to your input file
+input_file = 'input.txt'
+
+# Read and print gate details
+gates= read_gate_details(input_file)
+# for idx, (name, width, height) in enumerate(gates):
+#     print(f"Gate {idx + 1}: Name = {name}, Width = {width}, Height = {height}")
+gates.sort(key=lambda x :-x[2])
+# print(*gates)
+general=[]
+for __ in gates:
+    general.append(__[1])
+general.sort()
+ii=general[-1]
+# general.pop()
+# general.insert(0,ii)
+for i  in range(1,len(general)):
+    general[i]=general[i]+general[i-1]
+
+# print(*general)
+# print(*gates)
+def shelf(wi,_gates):
+    hh=_gates[0]
+    ht=hh[2]
+    ll=0
+    up=len(_gates)
+    __=0
+    while __<up:
+        _=_gates[__]
+        if ll+_[1]<=wi:
+            
+            ll=ll+_[1]       
+        else:
+            _i=__
+            while _i<up:
+                # print(_i,up)
+                if _gates[_i][1]+ll<=wi:
+                    ll=ll+_gates[_i][1]
+                    _gates.pop(_i)
+                    up=up-1
+                _i=_i+1
+            ll=_[1]
+            ht=ht+_[2]
+        __=__+1
+            
+    return wi*ht
+area=0
+for _ in gates:
+    area=area+(_[1]*_[2])
+# print(area)
+mini =ii
+# print(mini)
+# print(general[-1])
+_gates=[]
+for i in gates:
+    _gates.append(i)
+ff=shelf(ii,_gates)
+# print(ff)
+# print(shelf(2000,gates))
+for _ in general:
+    if(_<=ii):
+        continue
+    # _=general[__]
+    _gates=[]
+    for i in gates:
+        _gates.append(i)
+    aa=shelf(_,_gates)
+    if aa<ff:
+        mini=_
+        ff=aa
+        # print(_,aa)
+    # print(aa,mini)
+_gates=[]
+for i in gates:
+    _gates.append(i)
+iit=shelf(mini,_gates)
+iit=iit//mini
+# print(shelf(mini,gates))
+def shelfl(wi,gates):
+    ans=[]
+    hh=gates[0]
+    
+    ht=hh[2]
+    mm=ht
+    ll=0
+    up=len(gates)
+    __=0
+    bxht=ht
+    while __<up:
+        _=gates[__]
+        
+        if ll+_[1]<=wi:
+            
+            ll=ll+_[1]
+            jj=[]
+            jj.append(_[0])
+            jj.append(ll-_[1])
+            jj.append(ht-bxht)
+            ans.append(jj)       
+        else:
+            _i=__
+            while _i<up:
+                # print(_i,up)
+                if gates[_i][1]+ll<=wi:
+                    _ii=gates[_i]
+                    ll=ll+gates[_i][1]
+                    jj=[]
+                    jj.append(_ii[0])
+                    jj.append(ll-_ii[1])
+                    jj.append(ht-bxht)
+                    ans.append(jj)  
+                    gates.pop(_i)
+                    up=up-1
+                _i=_i+1
+            ll=_[1]
+            ht=ht+_[2]
+            bxht=_[2]
+            jj=[]
+            jj.append(_[0])
+            jj.append(ll-_[1])
+            jj.append(ht-bxht)
+            ans.append(jj)
+        __=__+1
+            
+    return ans
+_gates=[]
+for i in gates:
+    _gates.append(i)
+ans=shelfl(mini,_gates)
+print(*ans)
+print(time.time()-start_time)
+
+# gates_dimensions = {gate[0]: (gate[1], gate[2]) for gate in gates}
+# gate_bb = {
+#     'bounding_box': (mini, iit)
+# }
+# gates_coor = {gate[0]: (gate[1], gate[2]) for gate in ans}
+# gate_ans = {**gate_bb, **gates_coor}
+
+# root = draw_gate_packing(gates_dimensions, gate_ans, (860,860))
+# root.mainloop()
+_gates=[]
+for i in gates:
+    _gates.append(i)
+# print(*gates)
+print(area)
+aaaaa=(shelf(mini,_gates))
+print(aaaaa)
+print((area/aaaaa)*100)
+print(mini)
+# print(shelf(98,gates))
+print(time.time()-start_time)
